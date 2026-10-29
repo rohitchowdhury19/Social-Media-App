@@ -9,4 +9,4 @@ export const Followers = [
     {name : "Rahul SK", username: "RSK", img: img2},
     {name : "Natasha", username: "Natasha", img: img3},
     {name : "Tom Cruise", username: "TomCruise", img: img4},
-];
+]; 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './InfoCard.css';
 import EditIcon from '@mui/icons-material/Edit';
-import ProfileModal from '../ProfileModal/ProfileModal';
+import ProfileModal from '../ProfileModal/ProfileModal.jsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import * as UserApi from '../../api/UserRequest.js';
