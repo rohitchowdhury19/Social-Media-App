@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Auth.css';
 import Logo from '../../Img/logo.png';
 import { useDispatch, useSelector } from 'react-redux';
-import { logIn, signUp } from '../../actions/AuthAction.js';
+import { logIn, signUp } from '../../actions/AuthAction';
 
 
 const Auth = () => {

@@ -6,6 +6,7 @@ const postSchema = mongoose.Schema(
         desc: String,
         likes: [],
         image: String,
+        imageFileId: String,
         mediaType: {
             type: String,
             enum: ['image', 'video'],

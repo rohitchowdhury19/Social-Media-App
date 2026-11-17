@@ -2,17 +2,47 @@ import postModel from '../Models/postModel.js';
 import mongoose from 'mongoose';
 import UserModel from "../Models/userModel.js";
 import { createNotification } from './NotificationController.js';
+import imagekit from '../config/imagekit.js';
 
+// ImageKit auth params for client-side upload
+export const imagekitAuth = (req, res) => {
+    try {
+        const authParams = imagekit.getAuthenticationParameters();
+        res.status(200).json({
+            ...authParams,
+            publicKey: process.env.IMAGEKIT_PUBLIC_KEY
+        });
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
 
 // Create new post
 export const createPost = async (req, res) => {
-    const newPost = new postModel(req.body);
-
     try {
+        let image = req.body.image;
+        let imageFileId = req.body.imageFileId;
+
+        if (req.file) {
+            const result = await imagekit.upload({
+                file: req.file.buffer,
+                fileName: req.file.originalname,
+                folder: '/posts'
+            });
+            image = result.url;
+            imageFileId = result.fileId;
+        }
+
+        const newPost = new postModel({
+            ...req.body,
+            ...(image && { image }),
+            ...(imageFileId && { imageFileId }),
+        });
+
         await newPost.save();
-        res.status(200).json(newPost)
+        res.status(200).json(newPost);
     } catch (error) {
-        res.status(500).json(error)
+        res.status(500).json(error);
     }
 }
 
@@ -39,6 +69,13 @@ export const updatePost = async (req, res) => {
     try {
         const post = await postModel.findById(postId)
         if (post.userId === userId) {
+            if (req.body.imageFileId && post.imageFileId && req.body.imageFileId !== post.imageFileId) {
+                try {
+                    await imagekit.deleteFile(post.imageFileId);
+                } catch (err) {
+                    console.error('ImageKit delete failed on update:', err.message);
+                }
+            }
             await post.updateOne({ $set: req.body })
             res.status(200).json("Post Updated Successfully!")
         } else {
@@ -61,6 +98,13 @@ export const deletePost = async (req, res) => {
     try {
         const post = await postModel.findById(id);
         if (post.userId === requestUserId) {
+            if (post.imageFileId) {
+                try {
+                    await imagekit.deleteFile(post.imageFileId);
+                } catch (err) {
+                    console.error('ImageKit delete failed:', err.message);
+                }
+            }
             await post.deleteOne();
             res.status(200).json("Post deleted Successfully!")
         } else {

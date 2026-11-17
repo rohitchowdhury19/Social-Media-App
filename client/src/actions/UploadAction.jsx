@@ -10,6 +10,15 @@ export const uploadImage = (data) => async (dispatch) => {
     }
 }
 
+export const uploadToImageKit = (file) => async () => {
+    try {
+        return await UploadApi.uploadToImageKit(file)
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
+
 
 export const uploadPost = (data) => async (dispatch) => {
     dispatch({ type: 'UPLOAD_START' })

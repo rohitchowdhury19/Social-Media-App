@@ -74,8 +74,8 @@ const Post = ({ data }) => {
 
       {data.image && (
         data.mediaType === 'video'
-          ? <video src={publicFolder + data.image} controls className="postMedia" />
-          : <img src={publicFolder + data.image} alt="" />
+          ? <video src={data.image.startsWith('http') ? data.image : publicFolder + data.image} controls className="postMedia" />
+          : <img src={data.image.startsWith('http') ? data.image : publicFolder + data.image} alt="" />
       )}
 
       <div className="postReact">

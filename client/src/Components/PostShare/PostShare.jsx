@@ -6,7 +6,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { useDispatch, useSelector } from 'react-redux';
-import { uploadImage, uploadPost } from '../../actions/UploadAction';
+import { uploadPost, uploadToImageKit } from '../../actions/UploadAction';
 import publicFolder from '../../utils/publicFolder';
 
 const PostShare = () => {
@@ -69,18 +69,14 @@ const PostShare = () => {
         };
 
         if (media) {
-            const data = new FormData();
-            const filename = Date.now() + media.name;
-            data.append('name', filename);
-            data.append('file', media);
-
-            newPost.image = filename;
-            newPost.mediaType = mediaType;
-
             try {
-                await dispatch(uploadImage(data));
+                const uploadResult = await dispatch(uploadToImageKit(media));
+                newPost.image = uploadResult.url;
+                newPost.imageFileId = uploadResult.fileId;
+                newPost.mediaType = mediaType;
             } catch (error) {
                 console.log(error);
+                window.alert('Failed to upload media to ImageKit: ' + (error.message || 'Error'));
                 return;
             }
         }
