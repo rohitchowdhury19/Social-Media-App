@@ -1,0 +1,15 @@
+# Ignore build and dependency directories
+dist/
+build/
+coverage/
+.next/
+
+# Ignore minified files and logs
+*.min.js
+*.min.css
+*.log
+
+# Ignore lock files and specific configs
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
