@@ -1,4 +1,14 @@
 {
+  "name": "social-media-app",
+  "version": "1.0.0",
+  "description": "A full-stack social media web application built using the MERN stack.",
+  "main": "index.js",
+  "workspaces": ["client", "server"],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "npm run lint --workspace=client && npm run lint --workspace=server",
+    "lint:fix": "npm run lint:fix --workspace=client && npm run lint:fix --workspace=server"
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.15.0",
