@@ -11,7 +11,7 @@ export default [
   js.configs.recommended,
   // 3. Configure environment globals and custom rules
   {
-    files: ["*/.{js,mjs,cjs}"],
+    files: ["**/*.{js,mjs,cjs}"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",

@@ -3,20 +3,23 @@
   "version": "1.0.0",
   "description": "A full-stack social media web application built using the MERN stack.",
   "main": "index.js",
-  "workspaces": ["client", "server"],
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npm run lint --workspace=client && npm run lint --workspace=server",
-    "lint:fix": "npm run lint:fix --workspace=client && npm run lint:fix --workspace=server"
+    "lint:fix": "npm run lint:fix --workspace=client && npm run lint:fix --workspace=server",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "@eslint-react/eslint-plugin": "^5.30.6",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.15.0",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.14.0",
+    "husky": "^9.1.7",
     "prettier": "^3.10.1"
-  },
-  "dependencies": {
-    "@eslint-react/eslint-plugin": "^5.30.5"
   }
 }
