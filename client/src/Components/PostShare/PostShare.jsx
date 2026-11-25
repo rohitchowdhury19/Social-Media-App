@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import './PostShare.css';
 import PhotoOutlinedIcon from '@mui/icons-material/PhotoOutlined';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
@@ -8,6 +7,8 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadPost, uploadToImageKit } from '../../actions/UploadAction';
 import publicFolder from '../../utils/publicFolder';
+import { cn } from '../../utils/clsx';
+import { avatarClass, buttonClass, cardClass, inputClass } from '../../utils/styles';
 
 const PostShare = () => {
     const loading = useSelector((state) => state.postReducer.uploading);
@@ -85,49 +86,66 @@ const PostShare = () => {
         reset();
     };
 
+    const optionClass = 'px-[10px] py-[5px] rounded-[10px] flex items-center justify-center gap-1 text-sm cursor-pointer hover:bg-inputColor';
+    const previewMediaClass = 'w-full h-80 object-cover rounded-lg';
+
     return (
-        <div className="PostShare">
-            <img src={user.profilePicture ? publicFolder + user.profilePicture : publicFolder + 'defaultProfile.png'} alt="" />
+        <div className={cn(cardClass, 'flex gap-4')}>
+            <img
+                src={user.profilePicture ? publicFolder + user.profilePicture : publicFolder + 'defaultProfile.png'}
+                alt=""
+                className={avatarClass}
+            />
 
-            <div>
-                <input type="text" placeholder="Write a caption..." ref={desc} />
+            <div className="flex flex-col w-[90%] gap-4">
+                <input
+                    type="text"
+                    placeholder="Write a caption..."
+                    ref={desc}
+                    className={cn(inputClass, 'rounded-[10px] p-[10px] text-[17px]')}
+                />
 
-                <div className="postOptions">
-                    <div className="option" style={{ color: 'var(--photo)' }} onClick={() => openFilePicker('image')}>
+                <div className="flex justify-around flex-wrap gap-2">
+                    <div className={cn(optionClass, 'text-photo')} onClick={() => openFilePicker('image')}>
                         <PhotoOutlinedIcon />
                         Photo
                     </div>
 
-                    <div className="option" style={{ color: 'var(--video)' }} onClick={() => openFilePicker('video')}>
+                    <div className={cn(optionClass, 'text-video')} onClick={() => openFilePicker('video')}>
                         <PlayCircleOutlineIcon />
                         Video
                     </div>
 
-                    <div className="option" style={{ color: 'var(--location)' }} onClick={addLocation}>
+                    <div className={cn(optionClass, 'text-location')} onClick={addLocation}>
                         <LocationOnOutlinedIcon />
                         Location
                     </div>
 
-                    <div className="option" style={{ color: 'var(--shedule)' }} onClick={addSchedule}>
+                    <div className={cn(optionClass, 'text-schedule')} onClick={addSchedule}>
                         <CalendarMonthOutlinedIcon />
                         Shedule
                     </div>
 
-                    <button className="button ps-button" type="button" onClick={handleSubmit} disabled={loading}>
+                    <button
+                        className={cn(buttonClass, 'py-[5px] px-5 text-[15px]')}
+                        type="button"
+                        onClick={handleSubmit}
+                        disabled={loading}
+                    >
                         {loading ? 'uploading...' : 'Share'}
                     </button>
 
-                    <div style={{ display: 'none' }}>
+                    <div className="hidden">
                         <input type="file" name="myImage" accept="image/*" ref={fileRef} onChange={onMediaChange} />
                     </div>
                 </div>
 
                 {media && (
-                    <div className="previewImage">
-                        <CloseOutlinedIcon onClick={() => setMedia(null)} />
+                    <div className="relative">
+                        <CloseOutlinedIcon className="absolute right-4 top-2 cursor-pointer" onClick={() => setMedia(null)} />
                         {mediaType === 'video'
-                            ? <video src={URL.createObjectURL(media)} controls />
-                            : <img src={URL.createObjectURL(media)} alt="" />}
+                            ? <video src={URL.createObjectURL(media)} controls className={previewMediaClass} />
+                            : <img src={URL.createObjectURL(media)} alt="" className={previewMediaClass} />}
                     </div>
                 )}
             </div>

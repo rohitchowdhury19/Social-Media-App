@@ -5,7 +5,7 @@ import eslintConfigPrettier from "eslint-config-prettier";
 export default [
   // 1. Ignore build and dependency folders
   {
-    ignores: ["dist/*", "build/", "node_modules/*"],
+    ignores: ["**/dist/**", "**/build/**", "**/node_modules/**"],
   },
   // 2. Apply ESLint's recommended rules
   js.configs.recommended,
@@ -21,7 +21,7 @@ export default [
       },
     },
     rules: {
-      "no-unused-vars": "warn",
+      "no-unused-vars": ["warn", { "ignoreRestSiblings": true }],
       "no-console": "off",
     },
   },

@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { followUser, unFollowUser } from '../../actions/UserAction';
 import publicFolder from '../../utils/publicFolder';
+import { cn } from '../../utils/clsx';
+import { buttonClass } from '../../utils/styles';
 
 
 
@@ -21,20 +23,27 @@ const UserFollow = ({ person }) => {
     }
 
     return (
-        <div className="follower">
+        <div className="flex justify-between items-center">
 
-            <div className="followerUser" onClick={() => navigate(`/profile/${person._id}`)}>
-                <img src={person.profilePicture ? publicFolder + person.profilePicture : publicFolder + "defaultProfile.png"} alt="" className='followerImg' />
-                <div className="name">
-                    <span>{person.firstname}</span>
+            <div className="group flex gap-[10px] cursor-pointer" onClick={() => navigate(`/profile/${person._id}`)}>
+                <img
+                    src={person.profilePicture ? publicFolder + person.profilePicture : publicFolder + "defaultProfile.png"}
+                    alt=""
+                    className="w-[3.2rem] h-[3.2rem] rounded-full object-cover"
+                />
+                <div className="flex flex-col items-start justify-center">
+                    <span className="font-bold group-hover:text-purplePain transition-colors">{person.firstname}</span>
                     <span>@{person.firstname}  {person.lastname}</span>
                 </div>
             </div>
 
-            <button className='button fc-button' onClick={(e) => {
-                e.stopPropagation();
-                handleFollow();
-            }}>
+            <button
+                className={cn(buttonClass, 'h-8 px-[15px]')}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    handleFollow();
+                }}
+            >
                 {following ? "Unfollow" : "Follow"}
             </button>
 

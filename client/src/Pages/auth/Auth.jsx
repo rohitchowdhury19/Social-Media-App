@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import './Auth.css';
 import Logo from '../../Img/logo.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { logIn, signUp } from '../../actions/AuthAction';
+import { cn } from '../../utils/clsx';
+import { buttonClass, cardClass, inputClass } from '../../utils/styles';
 
 
 const Auth = () => {
@@ -44,60 +45,60 @@ const Auth = () => {
         })
     }
 
-
+    const authInputClass = cn(inputClass, 'px-4 py-3 flex-1 min-w-0');
 
     return (
 
         //    Left Side
-        <div className='Auth'>
-            <div className="a-left">
-                <img src={Logo} alt="" />
-                <div className="Webname">
-                    <h2>Welcome !</h2>
-                    <h5>Explore the ideas throughout <br /> the world.</h5>
+        <div className={cn('flex flex-col md:flex-row items-center justify-center min-h-screen gap-16 relative')}>
+            <div className={cn('flex items-center justify-center gap-8')}>
+                <img src={Logo} alt="" className="w-16 h-16 object-contain" />
+                <div>
+                    <h2 className="text-2xl font-bold text-[#2b2ba3]">Welcome !</h2>
+                    <h5 className="text-sm font-semibold">Explore the ideas throughout <br /> the world.</h5>
                 </div>
             </div>
 
 
             {/* Right Side */}
 
-            <div className="a-right">
-                <form className='infoForm authForm' onSubmit={handlSubmit}>
+            <div className={cn('flex items-center justify-center')}>
+                <form className={cn(cardClass, 'flex flex-col items-center justify-center gap-6 p-6 w-full max-w-md')} onSubmit={handlSubmit}>
 
-                    <h2>{isSignUp ? "Sign Up" : "Log In"}</h2>
+                    <h2 className="text-2xl font-bold">{isSignUp ? "Sign Up" : "Log In"}</h2>
 
                     {isSignUp &&
-                        <div>
+                        <div className="flex gap-4 w-full items-center">
                             <input type="text" placeholder='First Name'
-                                className='infoInput' name='firstname'
+                                className={authInputClass} name='firstname'
                                 onChange={handleChange}
                                 value={data.firstname}
                             />
                             <input type="text" placeholder='Last Name'
-                                className='infoInput' name='lastname'
+                                className={authInputClass} name='lastname'
                                 onChange={handleChange}
                                 value={data.lastname}
                             />
                         </div>
                     }
 
-                    <div>
+                    <div className="flex gap-4 w-full items-center">
                         <input type="text" placeholder='Email'
-                            className='infoInput' name='email'
+                            className={authInputClass} name='email'
                             onChange={handleChange}
                             value={data.email}
                         />
                     </div>
 
-                    <div>
+                    <div className="flex gap-4 w-full items-center">
                         <input type="password" placeholder='Password'
-                            className='infoInput' name='password'
+                            className={authInputClass} name='password'
                             onChange={handleChange}
                             value={data.password}
                         />
                         {isSignUp &&
                             <input type="password" placeholder='Confirm Password'
-                                className='infoInput' name='confirmpass'
+                                className={authInputClass} name='confirmpass'
                                 onChange={handleChange}
                                 value={data.confirmpass}
                             />
@@ -105,20 +106,20 @@ const Auth = () => {
                     </div>
 
 
-                    <span style={{ display: confirmPass ? "none" : "block", color: "red", fontSize: "12px", alignSelf: "flex-end", marginRight: "5px" }}>
+                    <span className={cn('text-xs text-red-500 self-end mr-[5px]', confirmPass ? 'hidden' : 'block')}>
                         * Confirm Password is not same
                     </span>
 
 
-                    <div>
-                        <span style={{ fontSize: "12px", cursor: "pointer" }}
+                    <div className="flex gap-4 w-full items-center justify-center">
+                        <span className="text-xs cursor-pointer hover:underline"
                             onClick={() => { setIsSignUp((prev) => !prev); restForm() }}
                         >
                             {isSignUp ? "Already have an account? Login here" : "Don't have an account? SignUp here"}
                         </span>
                     </div>
 
-                    <button className='button infoButton' type='submit' disabled={loading}>
+                    <button className={cn(buttonClass, 'w-24 h-8')} type='submit' disabled={loading}>
                         {loading ? "loading..." : isSignUp ? "Sign Up" : "Login"}
                     </button>
 

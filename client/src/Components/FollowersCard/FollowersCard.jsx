@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import './FollowersCard.css';
 import UserFollow from '../UserFollow/UserFollow';
 import { useSelector } from 'react-redux';
 import { getAllUser } from '../../api/UserRequest';
+import { cn } from '../../utils/clsx';
 
 
 
@@ -24,8 +24,8 @@ const FollowersCard = () => {
 
 
   return (
-    <div className='FollowersCard'>
-      <h3>People you may know...</h3>
+    <div className={cn('w-full rounded-[0.7rem] gap-4 flex flex-col text-[15px]')}>
+      <h3 className="text-lg font-bold">People you may know...</h3>
 
       {persons.map((person, id) => {
 

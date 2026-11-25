@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import './InfoCard.css';
 import EditIcon from '@mui/icons-material/Edit';
 import ProfileModal from '../ProfileModal/ProfileModal.jsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import * as UserApi from '../../api/UserRequest.js';
 import { logOut } from '../../actions/AuthAction';
+import { cn } from '../../utils/clsx';
+import { buttonClass, cardClass } from '../../utils/styles';
 
 
 
@@ -44,14 +45,14 @@ const InfoCard = () => {
 
 
   return (
-    <div className='InfoCard'>
+    <div className={cn(cardClass, 'flex flex-col gap-3 w-[90%]')}>
 
-      <div className="infoHead">
-        <h4>Profile Info</h4>
+      <div className="flex justify-between items-center">
+        <h4 className="text-base font-bold">Profile Info</h4>
 
         {user._id === profileUserId ?
 
-          (<div>
+          (<div className="cursor-pointer">
             <EditIcon width='2rem' height='1.2rem'
               onClick={() => setModalOpened(true)} />
 
@@ -64,28 +65,28 @@ const InfoCard = () => {
 
       </div>
 
-      <div className="info">
+      <div>
         <span>
           <b>Status </b>
         </span>
         <span>{profileUser.relationship}</span>
       </div>
 
-      <div className="info">
+      <div>
         <span>
           <b>Lives in </b>
         </span>
         <span>{profileUser.livesin}</span>
       </div>
 
-      <div className="info">
+      <div>
         <span>
           <b>Works at </b>
         </span>
         <span>{profileUser.worksAt}</span>
       </div>
 
-      <button className='button logout-button' onClick={handleLogOut}>Log Out</button>
+      <button className={cn(buttonClass, 'w-28 h-8 mt-24 self-end')} onClick={handleLogOut}>Log Out</button>
     </div>
   )
 }

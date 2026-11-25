@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import './Chat.css';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Home from '../../Img/home.png';
@@ -7,6 +6,8 @@ import { getAllUser } from '../../api/UserRequest';
 import { createConversation, createMessage, getConversations, getMessages, markMessagesRead } from '../../api/MessageRequest';
 import { useSocket } from '../../context/SocketContext';
 import publicFolder from '../../utils/publicFolder';
+import { cn } from '../../utils/clsx';
+import { avatarClass, buttonClass, inputClass } from '../../utils/styles';
 
 const Chat = () => {
     const { user } = useSelector((state) => state.authReducer.authData);
@@ -102,78 +103,91 @@ const Chat = () => {
         <img
             src={person?.profilePicture ? publicFolder + person.profilePicture : publicFolder + 'defaultProfile.png'}
             alt=""
+            className={avatarClass}
         />
     );
 
+    const conversationItemClass =
+        'w-full border-0 bg-transparent grid grid-cols-[3rem_1fr_0.6rem] items-center gap-[0.7rem] p-2 rounded-lg text-ink text-left cursor-pointer hover:bg-white transition-colors';
+
     return (
-        <div className="ChatPage">
-            <div className="ChatHeader">
-                <Link to="/home" className="iconButton">
-                    <img src={Home} alt="Home" />
+        <div className={cn('min-h-[calc(100vh-2rem)] flex flex-col gap-4')}>
+            <div className={cn('max-w-[1100px] w-full mx-auto grid grid-cols-[3rem_1fr] items-center gap-4 bg-cardColor rounded-lg p-4')}>
+                <Link to="/home" className="inline-flex items-center justify-center">
+                    <img src={Home} alt="Home" className="w-8 h-8" />
                 </Link>
-                <h2>Messages</h2>
+                <h2 className="text-2xl font-bold m-0">Messages</h2>
             </div>
 
-            <div className="ChatShell">
-                <div className="ConversationPanel">
-                    <h3>Chats</h3>
+            <div className={cn('max-w-[1100px] w-full mx-auto grid grid-cols-1 md:grid-cols-[320px_1fr] md:h-[calc(100vh-7rem)] gap-4')}>
+                <div className={cn('bg-cardColor rounded-lg p-4 overflow-auto flex flex-col gap-[0.6rem] min-h-[360px] md:min-h-0')}>
+                    <h3 className="text-lg font-bold my-2">Chats</h3>
                     {conversations.map((conversation) => (
                         <button
-                            className={currentChat?._id === conversation._id ? 'Conversation active' : 'Conversation'}
+                            className={cn(conversationItemClass, currentChat?._id === conversation._id && 'bg-white')}
                             key={conversation._id}
                             onClick={() => setCurrentChat(conversation)}
                         >
                             {renderUserImage(conversation.user)}
-                            <span>
+                            <span className="flex flex-col gap-[0.2rem] overflow-hidden">
                                 <b>{conversation.user?.firstname} {conversation.user?.lastname}</b>
-                                <small>{conversation.lastMessage || 'Start chatting'}</small>
+                                <small className="text-muted truncate">{conversation.lastMessage || 'Start chatting'}</small>
                             </span>
-                            {onlineUsers?.includes(conversation.user?._id) && <i />}
+                            {onlineUsers?.includes(conversation.user?._id) && (
+                                <i className="block w-[0.6rem] h-[0.6rem] rounded-full bg-photo" />
+                            )}
                         </button>
                     ))}
 
-                    <h3>New message</h3>
+                    <h3 className="text-lg font-bold my-2">New message</h3>
                     {usersWithoutConversation.map((person) => (
-                        <button className="Conversation" key={person._id} onClick={() => handleStartConversation(person._id)}>
+                        <button className={cn(conversationItemClass)} key={person._id} onClick={() => handleStartConversation(person._id)}>
                             {renderUserImage(person)}
-                            <span>
+                            <span className="flex flex-col gap-[0.2rem] overflow-hidden">
                                 <b>{person.firstname} {person.lastname}</b>
-                                <small>{onlineUsers?.includes(person._id) ? 'Online' : 'Offline'}</small>
+                                <small className="text-muted truncate">{onlineUsers?.includes(person._id) ? 'Online' : 'Offline'}</small>
                             </span>
                         </button>
                     ))}
                 </div>
 
-                <div className="MessagePanel">
+                <div className={cn('bg-cardColor rounded-lg p-4 overflow-auto grid grid-rows-[auto_1fr_auto] gap-4 min-h-[360px] md:min-h-0')}>
                     {currentChat ? (
                         <>
-                            <div className="MessageHeader">
+                            <div className="flex items-center gap-[0.8rem] border-b border-hrColor pb-4">
                                 {renderUserImage(currentChat.user)}
-                                <div>
+                                <div className="flex flex-col gap-[0.2rem] overflow-hidden">
                                     <b>{currentChat.user?.firstname} {currentChat.user?.lastname}</b>
-                                    <small>{onlineUsers?.includes(currentChat.user?._id) ? 'Online' : 'Offline'}</small>
+                                    <small className="text-muted truncate">{onlineUsers?.includes(currentChat.user?._id) ? 'Online' : 'Offline'}</small>
                                 </div>
                             </div>
 
-                            <div className="MessageList">
+                            <div className="flex flex-col gap-[0.6rem] overflow-auto">
                                 {messages.map((message) => (
-                                    <div className={message.senderId === user._id ? 'Message own' : 'Message'} key={message._id}>
+                                    <div
+                                        className={cn(
+                                            'w-fit max-w-[70%] rounded-[0.8rem] px-[0.9rem] py-[0.7rem]',
+                                            message.senderId === user._id ? 'self-end text-white bg-darkPurple' : 'bg-white'
+                                        )}
+                                        key={message._id}
+                                    >
                                         {message.text}
                                     </div>
                                 ))}
                             </div>
 
-                            <form className="MessageComposer" onSubmit={handleSend}>
+                            <form className="grid grid-cols-[1fr_6rem] gap-[0.7rem]" onSubmit={handleSend}>
                                 <input
+                                    className={cn(inputClass, 'p-[0.9rem]')}
                                     value={newMessage}
                                     onChange={(e) => setNewMessage(e.target.value)}
                                     placeholder="Message..."
                                 />
-                                <button className="button" type="submit">Send</button>
+                                <button className={cn(buttonClass)} type="submit">Send</button>
                             </form>
                         </>
                     ) : (
-                        <div className="NoChat">Select a chat or start a new message.</div>
+                        <div className="grid place-items-center text-muted">Select a chat or start a new message.</div>
                     )}
                 </div>
             </div>

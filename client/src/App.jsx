@@ -7,6 +7,8 @@ import Chat from './Pages/chat/Chat';
 import Notifications from './Pages/notifications/Notifications';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { SocketProvider } from './context/SocketContext';
+import { cn } from './utils/clsx';
+import { blurBlobClass } from './utils/styles';
 
 function App() {
 
@@ -16,9 +18,9 @@ function App() {
 
   return (
     <SocketProvider user={user?.user}>
-      <div className="App">
-        <div className="blur" style={{ top: '-18%', right: '0' }}></div>
-        <div className="blur" style={{ top: '36%', left: '-8rem' }}></div>
+      <div className={cn('relative min-h-screen overflow-hidden text-ink bg-[#f3f3f3] p-4')}>
+        <div className={cn(blurBlobClass, '-top-[18%] right-0')}></div>
+        <div className={cn(blurBlobClass, 'top-[36%] -left-32')}></div>
 
 
         <Routes>//React checks the current URL.

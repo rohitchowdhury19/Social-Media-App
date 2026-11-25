@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './Post.css';
 import Comment from '../../Img/comment.png';
 import Share from '../../Img/share.png';
 import Like from '../../Img/like.png';
@@ -9,6 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { commentPost, likePost } from '../../api/PostRequest';
 import { deletePost } from '../../actions/PostAction';
 import publicFolder from '../../utils/publicFolder';
+import { cn } from '../../utils/clsx';
+import { buttonClass, cardClass, inputClass } from '../../utils/styles';
 
 
 
@@ -64,52 +65,59 @@ const Post = ({ data }) => {
     }
   }
 
+  const mediaClass = 'w-full max-h-80 object-cover rounded-lg';
+
   return (
-    <div className='Post'>
+    <div className={cn(cardClass, 'flex flex-col gap-4 relative')}>
       {data.userId === user._id && (
-        <button className="deletePostButton" onClick={handleDelete} title="Delete post">
+        <button
+          className={cn('absolute top-[0.8rem] right-[0.8rem] w-8 h-8 border-0 rounded-full grid place-items-center bg-white/90 text-location cursor-pointer shadow-soft hover:bg-location hover:text-white transition-colors')}
+          onClick={handleDelete}
+          title="Delete post"
+        >
           <DeleteOutlineIcon fontSize="small" />
         </button>
       )}
 
       {data.image && (
         data.mediaType === 'video'
-          ? <video src={data.image.startsWith('http') ? data.image : publicFolder + data.image} controls className="postMedia" />
-          : <img src={data.image.startsWith('http') ? data.image : publicFolder + data.image} alt="" />
+          ? <video src={data.image.startsWith('http') ? data.image : publicFolder + data.image} controls className={mediaClass} />
+          : <img src={data.image.startsWith('http') ? data.image : publicFolder + data.image} alt="" className={mediaClass} />
       )}
 
-      <div className="postReact">
-        <img src={liked ? Like : Notlike} alt="" style={{ cursor: "pointer" }} onClick={handleLike} />
-        <img src={Comment} alt="" style={{ cursor: "pointer" }} onClick={() => setShowComments((prev) => !prev)} />
-        <img src={Share} alt="" style={{ cursor: "pointer" }} onClick={handleShare} />
+      <div className="flex items-start gap-6">
+        <img src={liked ? Like : Notlike} alt="" className="cursor-pointer" onClick={handleLike} />
+        <img src={Comment} alt="" className="cursor-pointer" onClick={() => setShowComments((prev) => !prev)} />
+        <img src={Share} alt="" className="cursor-pointer" onClick={handleShare} />
       </div>
 
-      <span style={{ color: "var(--gray)", fontSize: '14px' }}>{likes} likes</span>
-      <span className="commentCount" onClick={() => setShowComments((prev) => !prev)}>
+      <span className="text-muted text-sm">{likes} likes</span>
+      <span className="text-muted text-sm cursor-pointer" onClick={() => setShowComments((prev) => !prev)}>
         {comments.length} comments
       </span>
 
-      <div className="detail">
+      <div>
         <span> <b>{data.name}</b> </span>
         <span>{data.desc}</span>
       </div>
 
       {showComments && (
-        <div className="commentsBox">
+        <div className={cn('flex flex-col gap-[0.7rem] border-t border-hrColor pt-[0.8rem]')}>
           {comments.map((comment) => (
-            <div className="comment" key={comment._id || comment.createdAt}>
+            <div className="flex gap-[0.4rem] text-sm" key={comment._id || comment.createdAt}>
               <b>{comment.name}</b>
               <span>{comment.text}</span>
             </div>
           ))}
 
-          <form className="commentForm" onSubmit={handleComment}>
+          <form className="grid grid-cols-[1fr_5rem] gap-[0.6rem]" onSubmit={handleComment}>
             <input
+              className={cn(inputClass, 'p-[0.7rem]')}
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
               placeholder="Write a comment..."
             />
-            <button className="button" type="submit">Post</button>
+            <button className={cn(buttonClass)} type="submit">Post</button>
           </form>
         </div>
       )}

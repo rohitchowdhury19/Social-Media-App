@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
-import './Posts.css';
 import Post from '../Post/Post';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTimelinePosts } from '../../actions/PostAction';
 import { useParams } from 'react-router-dom';
+import { cn } from '../../utils/clsx';
 
 const Posts = () => {
 
@@ -23,7 +23,7 @@ const Posts = () => {
   }
 
   return (
-    <div className='Posts'>
+    <div className={cn('flex flex-col gap-4')}>
 
       {loading ? "Fetching Posts..." :
         posts.map((post, id) => {
